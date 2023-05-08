@@ -6,11 +6,10 @@ import com.example.lisam.repository.CommentRepository;
 import com.example.lisam.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -23,12 +22,12 @@ public class CommentController {
     private ItemRepository itemRepository;
 
 
-//    @GetMapping("/comments/add")
-//    public String addCommentPage(ModelMap modelMap){
+    @GetMapping("/comments/add")
+    public String addCommentPage(ModelMap modelMap) {
 //        List<Item> items = itemRepository.findAll();
 //        modelMap.addAttribute("items", items);
-//        return "singleItem";
-//    }
+        return "singleItem";
+    }
 
     @PostMapping("/comments/add")
     public String addComment(@RequestParam("comment") String comments, @RequestParam("id") int id) {

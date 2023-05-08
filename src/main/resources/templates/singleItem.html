@@ -30,7 +30,7 @@
                         <p class="comment-text" th:text="${comment.comment}"></p>
                         <samp class="date text-black-50" th:if="${comment.item != null}"
                               th:text="${comment.item.title}"></samp>
-                        <samp class="d-block font-weight-bold name"><a th:href="@{/comments/remove(id=${comment.id})}">Remove</a></samp>
+                        <samp class="d-block font-weight-bold name" th:href="@{'/items/' + ${item.id}}"><a th:href="@{/comments/remove(id=${comment.id})}">Remove</a></samp>
                     </div>
                 </div>
 
@@ -40,6 +40,7 @@
                             <img class="rounded-circle"><textarea class="form-control ml-1 shadow-none textarea" name="comment"></textarea><br>
                             <div class="mt-2 text-right">
                                 <input class="btn btn-outline-primary btn-sm ml-1 shadow-none" type="submit" value="Post comment">
+                                <a class="btn btn-outline-primary btn-sm ml-1 shadow-none" href="/items">Item</a>
                             </div>
                         </form>
                 </div>
