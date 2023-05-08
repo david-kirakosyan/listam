@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Items</title>
+</head>
+<body>
+<h1>Items</h1>
+<a href="/items/add"> Create Item</a>
+<table border="1px">
+    <tr>
+        <td>id</td>
+        <td>title</td>
+        <td>action</td>
+    </tr>
+    <tr th:each="item : ${items}">
+        <th th:text="${item.getId()}"></th>
+        <th> <a th:href="@{'/items/' + ${item.id}}"> <samp th:text="${item.getTitle()}"></samp> </a> </th>
+        <td><a th:href="@{/items/remove(id=${item.id})}">Remove</a></td>
+    </tr>
+</table>
+</body>
+</html>
