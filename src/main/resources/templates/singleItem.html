@@ -3,29 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Single Item</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<a href="/items">Back</a>
-<h2 th:text="${item.getTitle()}"></h2>
-<p th:text="${item.getDescription()}"></p>
-<samp th:if="${item.getCategory() != null}" th:text="${item.getCategory().getName()}"></samp>
+<div class="container mt-5">
+    <div class="d-flex justify-content-center row">
+        <div class="col-md-8">
+            <div class="d-flex flex-column comment-section">
+                <div class="bg-white p-2">
+                    <div class="d-flex flex-row user-info"><img class="rounded-circle">
+                        <div class="d-flex flex-column justify-content-start ml-2"><span
+                                class="d-block font-weight-bold name" th:text="${item.getTitle()}"></span><span
+                                th:if="${item.getCategory() != null}" th:text="${item.getCategory().getName()}"
+                                class="date text-black-50"></span></div>
+                    </div>
+                    <div class="mt-2">
+                        <p class="comment-text" th:text="${item.getDescription()}"></p>
+                    </div>
+                </div>
+                <div th:each="comment : ${comments}">
+                    <div class="d-flex flex-column justify-content-start ml-2" th:if="${item.id == comment.item.id}">
+                        <p class="comment-text" th:text="${comment.comment}"></p>
+                        <samp class="date text-black-50" th:if="${comment.item != null}"
+                              th:text="${comment.item.title}"></samp>
+                        <samp class="d-block font-weight-bold name"><a th:href="@{/comments/remove(id=${comment.id})}">Remove</a></samp>
+                    </div>
+                </div>
 
-<h3>Comment</h3>
-
-<div th:each="comment : ${comments}">
-    <div th:if="${item.id == comment.item.id}">
-        <p th:text="${comment.comment}"></p>
-        <samp th:if="${comment.item != null}" th:text="${comment.item.title}"></samp>
-        <a th:href="@{/comments/remove(id=${comment.id})}">Remove</a>
+                <div class="bg-light p-2">
+                        <form class="d-flex flex-row align-items-start" action="/comments/add" method="post">
+                            <input type="hidden" name="id" th:value="${item.id}">
+                            <img class="rounded-circle"><textarea class="form-control ml-1 shadow-none textarea" name="comment"></textarea><br>
+                            <div class="mt-2 text-right">
+                                <input class="btn btn-outline-primary btn-sm ml-1 shadow-none" type="submit" value="Post comment">
+                            </div>
+                        </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
-<form action="/comments/add" method="post">
-    <input type="hidden" name="id" th:value="${item.id}">
-    <textarea name="comment"></textarea><br>
-    <input type="submit" value="create">
-</form>
-
-
 </body>
 </html>
