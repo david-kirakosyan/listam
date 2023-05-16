@@ -7,10 +7,14 @@ import com.example.lisam.repository.CategoryRepository;
 import com.example.lisam.repository.CommentRepository;
 import com.example.lisam.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +29,9 @@ public class ItemController {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Value("${listam.upload.image.path}")
+    private String imageUploadPath;
+
     @GetMapping("/items")
     public String ItemsPage(ModelMap modelMap) {
         List<Item> items = itemRepository.findAll();
@@ -35,9 +42,9 @@ public class ItemController {
     @GetMapping("/items/{id}")
     public String singleItemPage(@PathVariable("id") int id, ModelMap modelMap) {
         Optional<Item> byId = itemRepository.findById(id);
-        List<Comment> comments = commentRepository.findAll();
         if (byId.isPresent()) {
             Item item = byId.get();
+            List<Comment> comments = commentRepository.findAllByItem_id(item.getId());
             modelMap.addAttribute("item", item);
             modelMap.addAttribute("comments", comments);
             return "singleItem";
@@ -56,7 +63,13 @@ public class ItemController {
     }
 
     @PostMapping("/items/add")
-    public String addItem(@ModelAttribute Item item) {
+    public String addItem(@ModelAttribute Item item, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            String fileName = System.nanoTime() + "_" + multipartFile.getOriginalFilename();
+            File file = new File(imageUploadPath + fileName);
+            multipartFile.transferTo(file);
+            item.setImgName(fileName);
+        }
         itemRepository.save(item);
         return "redirect:/items";
     }
@@ -66,6 +79,4 @@ public class ItemController {
         itemRepository.deleteById(id);
         return "redirect:/items";
     }
-
-
 }

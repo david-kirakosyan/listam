@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +20,9 @@ public class Comment {
     @Id
     private int id;
     @Column(name = "comment")
-    private String comment;
+    private String commentText;
+
+    private Date commentDate;
     @ManyToOne
     private Item item;
 }
