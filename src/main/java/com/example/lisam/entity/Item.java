@@ -27,5 +27,8 @@ public class Item {
     @ManyToOne
     private Category category;
 
+    @ManyToOne
+    private User user;
+
     private String imgName;
 }

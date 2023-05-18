@@ -1,9 +1,13 @@
 package com.example.lisam.controller;
 
+import com.example.lisam.security.CurrentUser;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,7 +22,10 @@ public class MainController {
     public String imageUploadPath;
 
     @GetMapping("/")
-    public String main(){
+    public String main(ModelMap modelMap, @AuthenticationPrincipal CurrentUser currentUser){
+        if (currentUser != null){
+            modelMap.addAttribute("user",currentUser.getUser());
+        }
         return "index";
     }
 

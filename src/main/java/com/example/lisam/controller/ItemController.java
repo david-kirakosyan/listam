@@ -6,8 +6,10 @@ import com.example.lisam.entity.Item;
 import com.example.lisam.repository.CategoryRepository;
 import com.example.lisam.repository.CommentRepository;
 import com.example.lisam.repository.ItemRepository;
+import com.example.lisam.security.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -63,13 +65,15 @@ public class ItemController {
     }
 
     @PostMapping("/items/add")
-    public String addItem(@ModelAttribute Item item, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+    public String addItem(@ModelAttribute Item item, @RequestParam("image") MultipartFile multipartFile,
+                          @AuthenticationPrincipal CurrentUser currentUser) throws IOException {
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String fileName = System.nanoTime() + "_" + multipartFile.getOriginalFilename();
             File file = new File(imageUploadPath + fileName);
             multipartFile.transferTo(file);
             item.setImgName(fileName);
         }
+        item.setUser(currentUser.getUser());
         itemRepository.save(item);
         return "redirect:/items";
     }

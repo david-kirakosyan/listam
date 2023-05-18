@@ -5,9 +5,6 @@
     <title>Single Item</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js">-->
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">-->
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
 </head>
 <body>
 <div class="container mt-5">
@@ -30,6 +27,7 @@
                         <p class="comment-text" th:text="${comment.commentText}"></p>
                         <samp class="date text-black-50" th:if="${comment.item != null}"
                               th:text="${comment.item.title}"></samp>
+                        <samp class="comment-text" th:text="${comment.user.name}"></samp>
                         <samp class="comment-text" th:text="${comment.commentDate}"></samp>
                         <samp class="d-block font-weight-bold name" th:href="@{'/items/' + ${item.id}}"><a th:href="@{/comments/remove(id=${comment.id})}">Remove</a></samp>
                     </div>
