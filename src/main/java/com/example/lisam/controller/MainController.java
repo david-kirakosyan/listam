@@ -1,11 +1,12 @@
 package com.example.lisam.controller;
 
+import com.example.lisam.entity.User;
+import com.example.lisam.entity.UserType;
 import com.example.lisam.security.CurrentUser;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,17 +23,34 @@ public class MainController {
     public String imageUploadPath;
 
     @GetMapping("/")
-    public String main(ModelMap modelMap, @AuthenticationPrincipal CurrentUser currentUser){
-        if (currentUser != null){
-            modelMap.addAttribute("user",currentUser.getUser());
-        }
+    public String main() {
+
         return "index";
+    }
+
+    @GetMapping("/customLogin")
+    public String customLogin() {
+        return "customLoginPage";
+    }
+
+    @GetMapping("/customSuccessLogin")
+    public String customSuccessLogin(@AuthenticationPrincipal CurrentUser currentUser) {
+        if (currentUser != null) {
+            User user = currentUser.getUser();
+            if (user.getUserType() == UserType.ADMIN) {
+                return "redirect:/user/admin";
+            } else if (user.getUserType() == UserType.USER) {
+                return "redirect:/";
+
+            }
+        }
+        return "redirect:/";
     }
 
     @GetMapping(value = "/getImage", produces = MediaType.IMAGE_JPEG_VALUE)
     public @ResponseBody byte[] getImage(@RequestParam("imageName") String imageName) throws IOException {
-        File file = new File(imageUploadPath+imageName);
-        if(file.exists()){
+        File file = new File(imageUploadPath + imageName);
+        if (file.exists()) {
             FileInputStream fis = new FileInputStream(file);
             return IOUtils.toByteArray(fis);
         }

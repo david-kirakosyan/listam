@@ -5,6 +5,7 @@
     <title>Add Category</title>
 </head>
 <body>
+<div th:include="fragment/header::headerFragment"></div>
 <form action="/items/add" method="post" enctype="multipart/form-data">
   <input type="text" name="title"><br>
     <textarea name="description"></textarea><br>

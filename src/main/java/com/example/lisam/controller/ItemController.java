@@ -3,6 +3,7 @@ package com.example.lisam.controller;
 import com.example.lisam.entity.Category;
 import com.example.lisam.entity.Comment;
 import com.example.lisam.entity.Item;
+import com.example.lisam.entity.UserType;
 import com.example.lisam.repository.CategoryRepository;
 import com.example.lisam.repository.CommentRepository;
 import com.example.lisam.repository.ItemRepository;
@@ -35,8 +36,14 @@ public class ItemController {
     private String imageUploadPath;
 
     @GetMapping("/items")
-    public String ItemsPage(ModelMap modelMap) {
-        List<Item> items = itemRepository.findAll();
+    public String ItemsPage(ModelMap modelMap,
+                            @AuthenticationPrincipal CurrentUser currentUser) {
+        List<Item> items;
+        if (currentUser.getUser().getUserType() == UserType.ADMIN) {
+            items = itemRepository.findAll();
+        } else {
+            items = itemRepository.findAllByUser_id(currentUser.getUser().getId());
+        }
         modelMap.addAttribute("items", items);
         return "items";
     }
