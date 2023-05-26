@@ -1,11 +1,9 @@
 package com.example.lisam.controller;
 
-import com.example.lisam.entity.Category;
-import com.example.lisam.entity.Comment;
-import com.example.lisam.entity.Item;
-import com.example.lisam.entity.UserType;
+import com.example.lisam.entity.*;
 import com.example.lisam.repository.CategoryRepository;
 import com.example.lisam.repository.CommentRepository;
+import com.example.lisam.repository.HashtagRepository;
 import com.example.lisam.repository.ItemRepository;
 import com.example.lisam.security.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +30,9 @@ public class ItemController {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private HashtagRepository hashtagRepository;
 
     @Value("${listam.upload.image.path}")
     private String imageUploadPath;
@@ -68,6 +70,7 @@ public class ItemController {
     public String addItemPage(ModelMap modelMap) {
         List<Category> categories = categoryRepository.findAll();
         modelMap.addAttribute("categories", categories);
+        modelMap.addAttribute("hashtags", hashtagRepository.findAll());
         return "addItem";
     }
 
@@ -81,6 +84,17 @@ public class ItemController {
             item.setImgName(fileName);
         }
         item.setUser(currentUser.getUser());
+//        if (tags != null && tags.isEmpty()){
+//            List<Hashtag> hashtags = new ArrayList<>();
+//            for (Integer tagId : tags) {
+//                Optional<Hashtag> byId = hashtagRepository.findById(tagId);
+//                if (byId.isPresent()){
+//                    hashtags.add(byId.get());
+//                }
+//            }
+//
+//            item.setHashtagList(hashtags);
+//        }
         itemRepository.save(item);
         return "redirect:/items";
     }
